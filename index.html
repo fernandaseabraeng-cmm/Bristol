@@ -1,0 +1,155 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Painel de Controle de SCs — BRISTOL</title>
+<style>
+:root{--navy:#1B2C4E;--coral:#F15E40;--blue:#2F5CA8;--green:#23A45B;--bg:#EBEEF4;--muted:#64748B;--line:#E6EAF1}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Nunito,Arial,sans-serif;background:var(--bg);color:#1B2C4E;padding:22px;font-size:14px}
+.wrap{max-width:1300px;margin:0 auto}
+header{background:var(--navy);color:#fff;border-radius:16px;padding:22px 28px;box-shadow:0 6px 20px rgba(27,44,78,.18);border-bottom:5px solid var(--coral)}
+header h1{font-size:19px;font-weight:800;letter-spacing:.2px;line-height:1.2} header h1 b{color:var(--coral)}
+header p{opacity:.85;font-size:12.5px;margin-top:5px}
+.tabs{display:flex;gap:8px;margin:16px 0 0}
+.tab{padding:10px 20px;border-radius:12px 12px 0 0;background:#dfe5ef;color:var(--navy);font-weight:800;font-size:13px;cursor:pointer;user-select:none}
+.tab.on{background:#fff;color:var(--navy);box-shadow:0 -2px 8px rgba(27,44,78,.06)}
+.tab:hover{background:#eef2f8}
+.fbands{display:flex;gap:14px;flex-wrap:wrap;margin:18px 0 0}
+.fcard{flex:1;min-width:200px;background:#fff;border-radius:12px;padding:13px 16px;box-shadow:0 2px 10px rgba(27,44,78,.06);border-left:5px solid var(--coral)}
+.fcard .ft{font-weight:800;color:var(--navy);font-size:13.5px} .fcard .fs{font-weight:600;color:var(--muted);font-size:12px;margin-top:3px}
+.fcard.b{border-left-color:var(--blue)} .fcard.g{border-left-color:var(--green)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin:18px 0}
+.kpi{background:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 2px 10px rgba(27,44,78,.06);border-top:4px solid var(--coral)}
+.kpi .n{font-size:30px;font-weight:800;line-height:1;color:var(--navy)} .kpi .l{font-size:12px;color:var(--muted);margin-top:6px}
+.kpi.p{border-top-color:#E8A33D} .kpi.p .n{color:#D98A22}
+.kpi.a{border-top-color:var(--green)} .kpi.a .n{color:var(--green)}
+.kpi.b{border-top-color:var(--blue)} .kpi.b .n{color:var(--blue)}
+.ckpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:18px 0}
+.ckpi{background:#fff;border-radius:14px;padding:16px 20px;box-shadow:0 2px 10px rgba(27,44,78,.06);border-left:5px solid var(--navy)}
+.ckpi .cl{font-size:12px;color:var(--muted);font-weight:700} .ckpi .cn{font-size:24px;font-weight:800;color:var(--navy);margin-top:6px;letter-spacing:-.5px}
+.ckpi.com{border-left-color:var(--coral)} .ckpi.com .cn{color:#C2452A}
+.ckpi.vb{border-left-color:var(--green)} .ckpi.vb .cn{color:#127A44}
+.card{background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(27,44,78,.06);margin-bottom:20px;overflow:hidden}
+.card h2{background:#fff;color:var(--navy);font-size:14.5px;font-weight:800;padding:14px 20px;border-bottom:2px solid var(--line);display:flex;align-items:center;gap:10px}
+.card h2::before{content:"";width:9px;height:20px;background:var(--coral);border-radius:3px;display:inline-block}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+thead th{background:var(--navy);color:#fff;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+td.vpos{color:#127A44;font-weight:700} td.vneg{color:#B0170A;font-weight:800}
+.uctag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:800;background:#FBE7DF;color:#B4472B}
+td.sc{font-weight:800;color:var(--navy);white-space:nowrap}
+td.ctr{text-align:center} td.det{font-size:12.5px;color:#33414f;line-height:1.5}
+tr.rowsc{cursor:pointer} tr.rowsc:hover{background:#F5F7FB}
+td.exp{width:26px;text-align:center;color:var(--coral);font-weight:800;font-size:16px}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.tag.mat{background:#DEE8F7;color:var(--blue)} .tag.serv{background:#FBE0D8;color:#B4472B}
+.st{display:inline-block;padding:4px 11px;border-radius:8px;font-size:11px;font-weight:800;white-space:nowrap}
+.st.pend{background:#FCEBCE;color:#96650B} .st.apr{background:#D6F0E1;color:#127A44}
+.st.rep{background:#FBD9D2;color:#B23A22} .st.ana{background:#E1E7F5;color:#2F5CA8}
+.drow>td{background:#FAFBFD;padding:0;border-bottom:2px solid var(--line)}
+.detail{padding:16px 20px}
+.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}
+@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.detail h3{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--navy);margin:2px 0 8px;font-weight:800} h3.mt{margin-top:14px}
+ol.aj{margin:0 0 0 18px;padding:0} ol.aj li{margin:6px 0;font-size:13px;line-height:1.55;color:#33414f}
+ul.good{margin:0;padding:0;list-style:none} ul.good li{margin:6px 0;font-size:12.5px;color:#127A44;position:relative;padding-left:16px}
+ul.good li::before{content:"✔";position:absolute;left:0;color:#23A45B;font-weight:800}
+.mtx table{width:100%;border-collapse:collapse} .mtx td.itn{font-size:12px;font-weight:600;color:#33414f;border:1px solid var(--line);padding:7px 9px}
+td.mc{text-align:center;font-weight:800;width:46px;border:1px solid var(--line)}
+.mok{background:#D6F0E1;color:#127A44} .mno{background:#FBD9D2;color:#B0170A} .mna{background:#EEF1F5;color:#8a8a8a}
+.meta{margin-top:12px;font-size:12px;color:#33414f;line-height:1.7;background:#F5F7FB;border-radius:8px;padding:10px 12px}
+.toolbar{background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(27,44,78,.06);padding:15px 20px;margin:20px 0;display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center}
+.toolbar input[type=text]{flex:1;min-width:220px;padding:10px 13px;border:1px solid #d3dae2;border-radius:10px;font-size:13px;font-family:inherit}
+.toolbar input[type=text]:focus{outline:none;border-color:var(--navy)}
+.fgroup{display:flex;gap:6px;flex-wrap:wrap;align-items:center} .fgroup .lbl{font-size:11px;color:var(--muted);margin-right:2px;font-weight:700}
+.chip{padding:7px 13px;border:1px solid #d3dae2;border-radius:20px;font-size:12px;font-weight:700;background:#fff;color:#33414f;cursor:pointer;user-select:none}
+.chip:hover{border-color:var(--navy)} .chip.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.count{font-size:12px;color:var(--muted);margin-left:auto} .count b{color:var(--navy)}
+.aprbox{background:#D6F0E1;color:#127A44;font-weight:800;font-size:13px;border-radius:8px;padding:11px 13px;border-left:4px solid var(--green)}
+.anabox{background:#E1E7F5;color:#24457E;font-weight:700;font-size:13px;border-radius:8px;padding:11px 13px;border-left:4px solid var(--blue)}
+.nodata{padding:18px;text-align:center;color:#96650B;font-size:13px;font-weight:700} .hide{display:none}
+.foot{font-size:11.5px;color:var(--muted);padding:13px 20px;line-height:1.6}
+</style></head><body><div class="wrap">
+<header><div class="htxt">
+<h1>Painel de Controle de Solicitações de Compra — <b>BRISTOL</b></h1>
+<p>Obra 1280 · Fase 1 · Lote 03 · Alto padrão · alvenaria convencional · Custo por Nível 18/09/2026</p>
+</div></header>
+
+<div class="tabs"><span class="tab on" data-tab="sc" onclick="pickTab(this)">Solicitações de Compra</span><span class="tab" data-tab="cu" onclick="pickTab(this)">Custo por Nível</span></div>
+
+<div id="tab-sc">
+<div class="fbands"><div class="fcard"><div class="ft">Fase 1 · Obra 1280</div><div class="fs">Bristol — Custos de Construção · Lote 03</div></div></div>
+
+<div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+<div class="kpi"><div class="n">4</div><div class="l">SCs no painel</div></div>
+<div class="kpi a"><div class="n">4</div><div class="l">Aprovadas</div></div>
+<div class="kpi p"><div class="n">0</div><div class="l">A ajustar</div></div>
+<div class="kpi b"><div class="n">0 / 4</div><div class="l">Material / Serviço</div></div>
+</div>
+
+<div class="toolbar">
+<input id="q" type="text" placeholder="Buscar por nº da SC, objeto ou responsável…" oninput="applyF()">
+<div class="fgroup"><span class="lbl">Status:</span>
+<span class="chip on" data-f="st" data-v="all" onclick="pick(this)">Todas</span>
+<span class="chip" data-f="st" data-v="apr" onclick="pick(this)">Aprovadas</span>
+<span class="chip" data-f="st" data-v="pend" onclick="pick(this)">A ajustar</span>
+<span class="chip" data-f="st" data-v="ana" onclick="pick(this)">Em análise</span>
+</div>
+<div class="fgroup"><span class="lbl">Tipo:</span>
+<span class="chip on" data-f="tp" data-v="all" onclick="pick(this)">Todos</span>
+<span class="chip" data-f="tp" data-v="mat" onclick="pick(this)">Material</span>
+<span class="chip" data-f="tp" data-v="serv" onclick="pick(this)">Serviço</span></div>
+<div class="fgroup"><span class="lbl">Responsável:</span><span class="chip on" data-f="rp" data-v="all" onclick="pick(this)">Todos</span><span class="chip" data-f="rp" data-v="gabriel-ramos" onclick="pick(this)">Gabriel Ramos</span></div>
+<span class="count" id="cnt"></span>
+</div>
+
+<div class="card"><h2>Solicitações e ajustes — clique na linha para ver o detalhe</h2>
+<table><thead><tr><th></th><th>SC</th><th>Objeto</th><th>Tipo</th><th>Status</th><th>Detalhamento</th></tr></thead>
+<tbody>
+<tr class="rowsc" data-sc="1400233" data-st="apr" data-tp="serv" data-resp="gabriel-ramos" data-text="1400233-supressao-vegetal-e-terraplanagem-supressao-bota-fora-de-camada-vegetal-corte-e-empilhamento-de-madeira-corte-e-aterro-e-emprestimo-de-material-de-1-categoria-gabriel-ramos-aprovada" onclick="toggle(this)"><td class="exp">+</td><td class="sc">1400233</td><td>Supressão vegetal e terraplanagem — supressão, bota-fora de camada vegetal, corte e empilhamento de madeira, corte e aterro e empréstimo de material de 1ª categoria</td><td class="ctr"><span class="tag serv">Serviço</span></td><td class="ctr"><span class="st apr">APROVADA</span></td><td class="det">Aprovada — checklist conforme.</td></tr><tr class="drow hide" data-for="1400233"><td colspan="6"><div class="detail"><div class="grid2"><div><div class="aprbox">✔ SC aprovada — sem ajustes.</div><h3 class="mt">Já está ok</h3><ul class="good"><li>Códigos, descrição e quantidades conferem com o levantamento e com o escopo.</li><li>Levantamento com memória de cálculo: corte reaproveitado (243 m³), aterro 9.950 m³ × 1,30 = 12.935 m³, empréstimo 12.692 m³.</li><li>Apropriação correta para a natureza do serviço.</li><li>QC itemizado e análise orçamentária igual ao custo por nível.</li><li>Cronograma de 13 semanas anexado.</li><li>Projeto de referência anexado e citado no levantamento.</li><li>Prazo de necessidade compatível com o SLA.</li></ul><div class="meta"><b>Responsável:</b> Gabriel Ramos · <b>Tipo:</b> Serviço<br><b>Apropriação:</b> 2 · 02.001.001.001 — TERRAPLANAGEM - MOBILIZAÇÃO, LIMPEZA, CORTE E ATERRO<br><b>SIENGE:</b> Obra 1280 · Fase 1</div></div><div><h3>Matriz dos 11 itens</h3><div class="mtx"><table><tbody><tr><td class="itn">1. SC c/ códigos novos</td><td class="mc mok">✔</td></tr><tr><td class="itn">2. Descrição dos insumos</td><td class="mc mok">✔</td></tr><tr><td class="itn">3. Qtd e unidade</td><td class="mc mok">✔</td></tr><tr><td class="itn">4. Apropriações corretas</td><td class="mc mok">✔</td></tr><tr><td class="itn">5. Levantamento</td><td class="mc mok">✔</td></tr><tr><td class="itn">6. Escopo detalhado</td><td class="mc mok">✔</td></tr><tr><td class="itn">7. QC × custo por nível</td><td class="mc mok">✔</td></tr><tr><td class="itn">8. Qtd do QC × SIENGE</td><td class="mc mok">✔</td></tr><tr><td class="itn">9. Cronograma anexado</td><td class="mc mok">✔</td></tr><tr><td class="itn">10. Projeto de referência</td><td class="mc mok">✔</td></tr><tr><td class="itn">11. Prazo de SLA</td><td class="mc mok">✔</td></tr></tbody></table></div></div></div></div></td></tr><tr class="rowsc" data-sc="1400239" data-st="apr" data-tp="serv" data-resp="gabriel-ramos" data-text="1400239-acompanhamento-ambiental-da-supressao-vegetal-condicionantes-da-licenca-resgate-e-afugentamento-de-fauna-relatorios-finais-e-tratativa-da-madeira-gabriel-ramos-aprovada" onclick="toggle(this)"><td class="exp">+</td><td class="sc">1400239</td><td>Acompanhamento ambiental da supressão vegetal — condicionantes da licença, resgate e afugentamento de fauna, relatórios finais e tratativa da madeira</td><td class="ctr"><span class="tag serv">Serviço</span></td><td class="ctr"><span class="st apr">APROVADA</span></td><td class="det">Aprovada — checklist conforme.</td></tr><tr class="drow hide" data-for="1400239"><td colspan="6"><div class="detail"><div class="grid2"><div><div class="aprbox">✔ SC aprovada — sem ajustes.</div><h3 class="mt">Já está ok</h3><ul class="good"><li>Código novo, descrição e apropriação corretos.</li><li>Quantidade validada pela obra para o período do serviço.</li><li>Escopo detalhado e cronograma anexados.</li><li>QC com análise orçamentária conferida e quantidade igual à do SIENGE.</li><li>Projeto de referência anexado.</li><li>Prazo de necessidade compatível com o SLA.</li></ul><div class="meta"><b>Responsável:</b> Gabriel Ramos · <b>Tipo:</b> Serviço<br><b>Apropriação:</b> 2 · 02.001.001.001 — TERRAPLANAGEM - MOBILIZAÇÃO, LIMPEZA, CORTE E ATERRO<br><b>SIENGE:</b> Obra 1280 · Fase 1</div></div><div><h3>Matriz dos 11 itens</h3><div class="mtx"><table><tbody><tr><td class="itn">1. SC c/ códigos novos</td><td class="mc mok">✔</td></tr><tr><td class="itn">2. Descrição dos insumos</td><td class="mc mok">✔</td></tr><tr><td class="itn">3. Qtd e unidade</td><td class="mc mok">✔</td></tr><tr><td class="itn">4. Apropriações corretas</td><td class="mc mok">✔</td></tr><tr><td class="itn">5. Levantamento</td><td class="mc mna">N/A</td></tr><tr><td class="itn">6. Escopo detalhado</td><td class="mc mok">✔</td></tr><tr><td class="itn">7. QC × custo por nível</td><td class="mc mok">✔</td></tr><tr><td class="itn">8. Qtd do QC × SIENGE</td><td class="mc mok">✔</td></tr><tr><td class="itn">9. Cronograma anexado</td><td class="mc mok">✔</td></tr><tr><td class="itn">10. Projeto de referência</td><td class="mc mok">✔</td></tr><tr><td class="itn">11. Prazo de SLA</td><td class="mc mok">✔</td></tr></tbody></table></div></div></div></div></td></tr><tr class="rowsc" data-sc="1400253" data-st="apr" data-tp="serv" data-resp="gabriel-ramos" data-text="1400253-confeccao-de-placas-de-identificacao-de-obra-bristol-lote-03-8-placas-responsaveis-tecnicos-gsst-fornecedores-incorporacao-obra-licenciada-seguranca-e-qualidade-gabriel-ramos-aprovada" onclick="toggle(this)"><td class="exp">+</td><td class="sc">1400253</td><td>Confecção de placas de identificação de obra — Bristol Lote 03 (8 placas: responsáveis técnicos, GSST, fornecedores, incorporação, obra licenciada, segurança e qualidade)</td><td class="ctr"><span class="tag serv">Serviço</span></td><td class="ctr"><span class="st apr">APROVADA</span></td><td class="det">Aprovada — checklist conforme.</td></tr><tr class="drow hide" data-for="1400253"><td colspan="6"><div class="detail"><div class="grid2"><div><div class="aprbox">✔ SC aprovada — sem ajustes.</div><h3 class="mt">Já está ok</h3><ul class="good"><li>As 8 placas batem entre SC, escopo e QC.</li><li>Apropriação correta na comunicação visual do canteiro.</li><li>Escopo detalhado e cronograma anexados.</li><li>Alvará, licença, ART e manual de placas anexados.</li><li>Prazo de necessidade compatível com o SLA.</li></ul><div class="meta"><b>Responsável:</b> Gabriel Ramos · <b>Tipo:</b> Serviço<br><b>Apropriação:</b> 1 · 01.007.005.001 — PLACAS DE COMUNICAÇÃO VISUAL<br><b>SIENGE:</b> Obra 1280 · Fase 1</div></div><div><h3>Matriz dos 11 itens</h3><div class="mtx"><table><tbody><tr><td class="itn">1. SC c/ códigos novos</td><td class="mc mok">✔</td></tr><tr><td class="itn">2. Descrição dos insumos</td><td class="mc mok">✔</td></tr><tr><td class="itn">3. Qtd e unidade</td><td class="mc mok">✔</td></tr><tr><td class="itn">4. Apropriações corretas</td><td class="mc mok">✔</td></tr><tr><td class="itn">5. Levantamento</td><td class="mc mna">N/A</td></tr><tr><td class="itn">6. Escopo detalhado</td><td class="mc mok">✔</td></tr><tr><td class="itn">7. QC × custo por nível</td><td class="mc mok">✔</td></tr><tr><td class="itn">8. Qtd do QC × SIENGE</td><td class="mc mok">✔</td></tr><tr><td class="itn">9. Cronograma anexado</td><td class="mc mok">✔</td></tr><tr><td class="itn">10. Projeto de referência</td><td class="mc mok">✔</td></tr><tr><td class="itn">11. Prazo de SLA</td><td class="mc mok">✔</td></tr></tbody></table></div></div></div></div></td></tr><tr class="rowsc" data-sc="1400255" data-st="apr" data-tp="serv" data-resp="gabriel-ramos" data-text="1400255-servicos-de-topografia-implantacao-geodesica-levantamento-planialtimetrico-locacao-de-pontos-eixos-de-projeto-gabaritos-e-extracao-de-coordenadas-gabriel-ramos-aprovada" onclick="toggle(this)"><td class="exp">+</td><td class="sc">1400255</td><td>Serviços de topografia — implantação geodésica, levantamento planialtimétrico, locação de pontos, eixos de projeto, gabaritos e extração de coordenadas</td><td class="ctr"><span class="tag serv">Serviço</span></td><td class="ctr"><span class="st apr">APROVADA</span></td><td class="det">Aprovada — checklist conforme.</td></tr><tr class="drow hide" data-for="1400255"><td colspan="6"><div class="detail"><div class="grid2"><div><div class="aprbox">✔ SC aprovada — sem ajustes.</div><h3 class="mt">Já está ok</h3><ul class="good"><li>Escopo detalhado conforme.</li><li>30 diárias batem entre SC, escopo e QC.</li><li>Apropriação correta e unidade igual à do orçamento.</li><li>QC com análise orçamentária igual ao custo por nível.</li><li>Cronograma da topografia anexado e projeto geodésico de referência anexado.</li></ul><div class="meta"><b>Responsável:</b> Gabriel Ramos · <b>Tipo:</b> Serviço<br><b>Apropriação:</b> 2 · 01.001.001.001 — SERVIÇOS TOPOGRÁFICOS<br><b>SIENGE:</b> Obra 1280 · Fase 1</div></div><div><h3>Matriz dos 11 itens</h3><div class="mtx"><table><tbody><tr><td class="itn">1. SC c/ códigos novos</td><td class="mc mok">✔</td></tr><tr><td class="itn">2. Descrição dos insumos</td><td class="mc mok">✔</td></tr><tr><td class="itn">3. Qtd e unidade</td><td class="mc mok">✔</td></tr><tr><td class="itn">4. Apropriações corretas</td><td class="mc mok">✔</td></tr><tr><td class="itn">5. Levantamento</td><td class="mc mna">N/A</td></tr><tr><td class="itn">6. Escopo detalhado</td><td class="mc mok">✔</td></tr><tr><td class="itn">7. QC × custo por nível</td><td class="mc mok">✔</td></tr><tr><td class="itn">8. Qtd do QC × SIENGE</td><td class="mc mok">✔</td></tr><tr><td class="itn">9. Cronograma anexado</td><td class="mc mok">✔</td></tr><tr><td class="itn">10. Projeto de referência</td><td class="mc mok">✔</td></tr><tr><td class="itn">11. Prazo de SLA</td><td class="mc mok">✔</td></tr></tbody></table></div></div></div></div></td></tr>
+</tbody></table>
+<div id="nodata" class="nodata hide">Nenhuma SC para os filtros selecionados.</div></div>
+</div>
+
+<div id="tab-cu" class="hide">
+<div class="toolbar"><span class="count">Custo por Nível (SIENGE) · snapshot 18/09/2026 · verba = orçado − comprometido</span></div>
+<div class="ckpis">
+<div class="ckpi orc"><div class="cl">Orçado (obra)</div><div class="cn">R$ 74.320.993,22</div></div>
+<div class="ckpi com"><div class="cl">Comprometido</div><div class="cn">R$ 7.000,00</div></div>
+<div class="ckpi vb"><div class="cl">Verba disponível</div><div class="cn">R$ 74.313.993,22</div></div>
+</div>
+<div class="card"><h2>Unidade construtiva</h2>
+<table><thead><tr><th>Unidade construtiva</th><th class="num">Orçado</th><th class="num">Comprometido</th><th class="num">Verba disp.</th></tr></thead>
+<tbody><tr><td>1 - ADMINISTRAÇÃO DA OBRA</td><td class="num">R$ 12.982.490,79</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 12.982.490,79</td></tr><tr><td>2 - INFRA E URBANIZAÇÃO</td><td class="num">R$ 19.551.147,69</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 19.551.147,69</td></tr><tr><td>3 - TORRES</td><td class="num">R$ 41.780.354,74</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 41.780.354,74</td></tr><tr><td>4 - OBRAS NÃO INCIDENTES</td><td class="num">R$ 7.000,00</td><td class="num">R$ 7.000,00</td><td class="num vpos">R$ 0,00</td></tr><tr><td>5 - GASTOS POS OBRA</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr></tbody></table><div class="foot">A UC <b>5 - GASTOS POS OBRA</b> existe no cadastro da obra, mas ainda não tem linhas orçadas neste snapshot.</div></div>
+<div class="card"><h2>Principais grupos (por orçado)</h2>
+<table><thead><tr><th>UC</th><th>Grupo</th><th class="num">Orçado</th><th class="num">Comprometido</th><th class="num">Verba disp.</th></tr></thead>
+<tbody><tr><td><span class="uctag">3</span></td><td>01.002 · ESTRUTURA</td><td class="num">R$ 13.487.801,27</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 13.487.801,27</td></tr><tr><td><span class="uctag">2</span></td><td>05.013 · EDIFÍCIO GARAGEM</td><td class="num">R$ 9.433.239,58</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 9.433.239,58</td></tr><tr><td><span class="uctag">3</span></td><td>01.007 · INSTALAÇÕES</td><td class="num">R$ 7.165.837,97</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 7.165.837,97</td></tr><tr><td><span class="uctag">1</span></td><td>01.001 · EQUIPE/ RECURSOS HUMANOS</td><td class="num">R$ 6.780.881,89</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 6.780.881,89</td></tr><tr><td><span class="uctag">2</span></td><td>04.001 · INSTALAÇÕES DE REDES</td><td class="num">R$ 5.500.000,00</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 5.500.000,00</td></tr><tr><td><span class="uctag">3</span></td><td>01.001 · FUNDAÇÃO</td><td class="num">R$ 4.108.847,53</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 4.108.847,53</td></tr><tr><td><span class="uctag">3</span></td><td>01.008 · ESQUADRIAS</td><td class="num">R$ 3.641.442,48</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 3.641.442,48</td></tr><tr><td><span class="uctag">3</span></td><td>01.003 · ALVENARIAS / PAINÉIS E PRÉ-MOLDADOS</td><td class="num">R$ 3.337.647,29</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 3.337.647,29</td></tr><tr><td><span class="uctag">1</span></td><td>01.006 · EQUIPAMENTOS</td><td class="num">R$ 2.217.900,00</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 2.217.900,00</td></tr><tr><td><span class="uctag">3</span></td><td>01.004 · REVESTIMENTOS CIMENTÍCIOS </td><td class="num">R$ 1.905.344,52</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 1.905.344,52</td></tr><tr><td><span class="uctag">3</span></td><td>01.016 · PINTURA E BELEZA</td><td class="num">R$ 1.645.324,71</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 1.645.324,71</td></tr><tr><td><span class="uctag">3</span></td><td>01.011 · REVESTIMENTO CERÂMICO / PORCELANATO</td><td class="num">R$ 1.393.516,12</td><td class="num">R$ 0,00</td><td class="num vpos">R$ 1.393.516,12</td></tr></tbody></table></div>
+<div class="card"><h2>Linhas com verba negativa</h2><div class="nodata" style="color:#127A44">Nenhuma linha com verba negativa neste snapshot — obra em pré-obra, sem comprometido lançado (exceto Laudo de Vizinhança).</div></div>
+</div>
+
+<div class="foot">Painel atualizado a cada SC analisada. Custo por Nível é snapshot diário (verba = orçado − comprometido); snapshot 18/09/2026. Obra em pré-obra: orçamento executivo e cronograma ainda sujeitos a alteração.</div>
+</div>
+<script>
+var fSt='all', fTp='all', fRp='all';
+function pickTab(el){var t=el.getAttribute('data-tab');
+ document.querySelectorAll('.tab').forEach(function(c){c.classList.remove('on');}); el.classList.add('on');
+ document.getElementById('tab-sc').classList.toggle('hide',t!=='sc');
+ document.getElementById('tab-cu').classList.toggle('hide',t!=='cu');}
+function pick(el){var f=el.getAttribute('data-f'),v=el.getAttribute('data-v');
+ document.querySelectorAll('.chip[data-f="'+f+'"]').forEach(function(c){c.classList.remove('on');});
+ el.classList.add('on'); if(f==='st'){fSt=v;}else if(f==='tp'){fTp=v;}else{fRp=v;} applyF();}
+function toggle(row){var sc=row.getAttribute('data-sc');var d=document.querySelector('.drow[data-for="'+sc+'"]');
+ if(!d)return; var open=d.classList.toggle('hide')===false; row.querySelector('.exp').textContent=open?'−':'+';}
+function applyF(){var q=document.getElementById('q').value.toLowerCase().trim();
+ var rows=[].slice.call(document.querySelectorAll('tr.rowsc'));var total=0;
+ rows.forEach(function(r){var okS=(fSt==='all')||(r.getAttribute('data-st')===fSt);
+  var okT=(fTp==='all')||(r.getAttribute('data-tp')===fTp);
+  var okR=(fRp==='all')||(r.getAttribute('data-resp')===fRp);
+  var okQ=(q==='')||(r.getAttribute('data-text').indexOf(q)>=0);var show=okS&&okT&&okR&&okQ;
+  r.classList.toggle('hide',!show);var d=document.querySelector('.drow[data-for="'+r.getAttribute('data-sc')+'"]');
+  if(!show){if(d)d.classList.add('hide');r.querySelector('.exp').textContent='+';} if(show)total++;});
+ document.getElementById('nodata').classList.toggle('hide',total>0);
+ document.getElementById('cnt').innerHTML=total===0?'Nenhum resultado':'Mostrando <b>'+total+'</b> SC(s)';}
+applyF();
+</script>
+</body></html>
